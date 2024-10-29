@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  api-vendas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-vendas
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "5082:8080"
+      - "7048:8081"
+    depends_on:
+      - mysql
+      - rabbitmq
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: K86l0QK9EltKIjZ
+      MYSQL_DATABASE: VendasDb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  mysql_data:
